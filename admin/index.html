@@ -1,1 +1,194 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Admin Panel</title>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+	<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+	<script src="https://www.gstatic.com/firebasejs/9.6.1/firebase.js"></script>
 
+
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+
+
+
+
+
+
+</head>
+<body>
+	<div class="container">
+		<h1>Admin Panel</h1>
+		<form id="post-form">
+			<div class="form-group">
+				<label for="propertyName">Property Name</label>
+				<input type="text" class="form-control" id="propertyName" placeholder="Enter property name">
+			</div>
+			<div class="form-group">
+				<label for="propertyImage">Property Image</label>
+				<input type="file" class="form-control" id="propertyImage">
+			</div>
+			<div class="form-group">
+				<label for="amount">Amount</label>
+				<input type="number" class="form-control" id="amount" placeholder="Enter amount">
+			</div>
+			<div class="form-group">
+				<label for="contact">Contact</label>
+				<input type="text" class="form-control" id="contact" placeholder="Enter contact information">
+			</div>
+			<div class="form-group">
+				<label for="priceTag">Price Tag</label>
+				<input type="text" class="form-control" id="priceTag" placeholder="Enter price tag">
+			</div>
+			<button type="submit" class="btn btn-primary">Post</button>
+		</form>
+		<h2>Properties</h2>
+		<div id="properties-container">
+			<!-- Properties will be displayed here -->
+		</div>
+	</div>
+
+	<script>
+		//// Import the functions you need from the SDKs you need
+import { initializeApp } from "https://www.gstatic.com/firebasejs/9.13.0/firebase-app.js";
+import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.13.0/firebase-analytics.js";
+import { getStorage, ref as sRef, uploadBytesResumable, getDownloadURL } from "https://www.gstatic.com/firebasejs/9.13.0/firebase-storage.js";
+
+// Your web app's Firebase configuration
+const firebaseConfig = {
+  apiKey: "AIzaSyB01txdnuaFitXw0Kv68WSWItw4pvCUkw8",
+  authDomain: "image-storage-fddf1.firebaseapp.com",
+  projectId: "image-storage-fddf1",
+  storageBucket: "image-storage-fddf1.appspot.com",
+  messagingSenderId: "695462217036",
+  appId: "1:695462217036:web:4358b799ebaffdd5ac3be9",
+  measurementId: "G-JF9QP6SEVY"
+};
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+const analytics = getAnalytics(app);
+
+var Files = [];
+var FileReaders = [];
+var ImageLinksArray = [];
+let isUploaded = false;
+
+const form = document.getElementById('post-form');
+const propertyName = document.getElementById('propertyName');
+const propertyImage = document.getElementById('propertyImage');
+const amount = document.getElementById('amount');
+const contact = document.getElementById('contact');
+const priceTag = document.getElementById('priceTag');
+const propertiesContainer = document.getElementById('properties-container');
+
+// events
+
+form.addEventListener('submit', (e) => {
+  e.preventDefault();
+  UploadAllImages();
+});
+
+// firebase upload
+
+function GetImgUploadProgress() {
+  return 'Images Uploading: ' + ImageLinksArray.length + 'of' + Files.length;
+}
+
+function IsAllImagesUploaded() {
+  return ImageLinksArray.length == Files.length;
+}
+
+function RestoreBack(){
+  form.reset();
+}
+
+function UploadAllImages(){ 
+  Files = [propertyImage.files[0]];
+  for(let i = 0; i < Files.length; i++){
+    UploadAnImage(Files[i], i);
+  }
+}
+
+function UploadAnImage(imgToUpload, imgNo){
+  const metadata = {
+    contentType: imgToUpload.type
+  };
+  
+  const storage = getStorage();
+  
+  const ImageAddress = "properties/" + propertyName.value + ".jpg";
+  
+  const storageRef = sRef(storage, ImageAddress);
+  
+  const UploadTask = uploadBytesResumable(storageRef, imgToUpload, metadata);
+  
+  UploadTask.on('state-changed', snapshot => {
+    console.log(GetImgUploadProgress());
+  }, error => {
+    alert("error: Image upload Failed");
+  }, () => {
+    getDownloadURL(UploadTask.snapshot.ref).then(downloadURL => {
+      ImageLinksArray.push(downloadURL);
+      if(IsAllImagesUploaded){
+        PostProperty();
+      }
+    });
+  });
+}
+
+// ... (rest of the code remains the same)
+
+function PostProperty(){
+  const databaseRef = firebase.database().ref("properties");
+  databaseRef.push({
+    propertyName: propertyName.value,
+    propertyImage: ImageLinksArray[0],
+    amount: amount.value,
+    contact: contact.value,
+    priceTag: priceTag.value
+  }).then(() => {
+    // Show success dialog
+    Swal.fire({
+      title: 'Success!',
+      text: 'Property posted successfully!',
+      icon: 'success',
+      confirmButtonText: 'OK'
+    });
+  });
+  RestoreBack();
+  DisplayProperties();
+}
+
+function DisplayProperties(){
+  const databaseRef = firebase.database().ref("properties");
+  databaseRef.on("value", function(snapshot) {
+    propertiesContainer.innerHTML = "";
+    snapshot.forEach(function(childSnapshot) {
+      var childKey = childSnapshot.key;
+      var childData = childSnapshot.val();
+      var propertyHTML = `
+        <div class="card mb-4">
+          <img src="${childData.propertyImage}" class="card-img-top">
+          <div class="card-body">
+            <h5 class="card-title">${childData.propertyName}</h5>
+            <p class="card-text">Amount: ${childData.amount}</p>
+            <p class="card-text">Contact: ${childData.contact}</p>
+            <p class="card-text">Price Tag: ${childData.priceTag}</p>
+          </div>
+        </div>
+      `;
+      propertiesContainer.innerHTML += propertyHTML;
+    });
+  });
+}
+
+DisplayProperties();
+
+	</script>
+</body>
+</html>
