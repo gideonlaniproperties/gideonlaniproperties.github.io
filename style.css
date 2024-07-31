@@ -128,7 +128,7 @@ header {
 .hamburger-menu .strip {
     display: block;
     height: 1px;
-    background-color: #fff;
+    background-color: #f69314;
     margin: 4px 0;
 }
 
@@ -168,7 +168,7 @@ header ul.is-sticky li a.active {
 
 /* start: hero section styles */
 #hero {
-    background: url('https://onclickwebdesign.com/wp-content/uploads/hero_1.jpg') center center no-repeat;
+    background: url('https://onclickwebdesign.com/wp-content/uploads/hero_1.jpg'); center center no-repeat;
     background-size: cover;
     position: absolute;
     top: 0;
@@ -185,7 +185,7 @@ header ul.is-sticky li a.active {
     top: 0;
     left: 0;
     background: rgba(52, 58, 64, 0.9);
-    z-index: 1;
+ background: url('images/big.jpg');   z-index: 1;
 }
 
 #hero .hero-text {
