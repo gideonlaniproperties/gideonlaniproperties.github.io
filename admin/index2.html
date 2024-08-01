@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Admin Panel - Post Properties</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css">
+  <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+  <div id="admin-panel">
+    <h2>Post Properties</h2>
+    <form v-on:submit.prevent="postProperty">
+      <input type="text" v-model="propertyName" placeholder="Name of Property">
+      <input type="number" v-model="price" placeholder="Price">
+      <input type="text" v-model="propertyType" placeholder="Type of Property">
+      <input type="date" v-model="datePosted" placeholder="Date Posted">
+      <input type="text" v-model="owner" placeholder="Owner">
+      <input type="text" v-model="contact" placeholder="Contact">
+      <input type="file" v-model="image" placeholder="Image">
+      <button type="submit">Post Property</button>
+    </form>
+    <div v-if="posted" class="dialog">
+      <p>Property posted successfully!</p>
+    </div>
+    <div class="posted-properties">
+      <h2>Posted Properties</h2>
+      <ul>
+        <li v-for="property in properties">
+          <img v-bind:src="property.image" alt="Property Image">
+          <h3>{{ property.name }}</h3>
+          <p>Price: {{ property.price }}</p>
+          <p>Type: {{ property.type }}</p>
+          <p>Date Posted: {{ property.datePosted }}</p>
+          <p>Owner: {{ property.owner }}</p>
+          <p>Contact: {{ property.contact }}</p>
+        </li>
+      </ul>
+    </div>
+  </div>
+  <script src='https://cdnjs.cloudflare.com/ajax/libs/vue/1.0.26/vue.min.js'></script>
+  <script src='./script.js'></script>
+
+
+
+<script>
+
+// Firebase config
+var config = {
+  apiKey: "AIzaSyDeKIutwIDgLhXlPRH3a0jmXKsnGXVVGwU",
+  authDomain: "vuedemo-669fb.firebaseapp.com",
+  databaseURL: "https://vuedemo-669fb.firebaseio.com",
+  storageBucket: "vuedemo-669fb.appspot.com",
+};
+
+// Firebase initialize
+firebase.initializeApp(config);
+
+// Set Properties firebase object
+var Properties = firebase.database().ref('/properties');
+
+// Create Vue component
+var adminPanel = new Vue({
+  el: '#admin-panel',
+  data: {
+    propertyName: '',
+    price: '',
+    propertyType: '',
+    datePosted: '',
+    owner: '',
+    contact: '',
+    image: '',
+    posted: false,
+    properties: [],
+  },
+  methods: {
+    postProperty: function() {
+      Properties.push({
+        name: this.propertyName,
+        price: this.price,
+        type: this.propertyType,
+        datePosted: this.datePosted,
+        owner: this.owner,
+        contact: this.contact,
+        image: this.image,
+      });
+      this.posted = true;
+      this.properties.push({
+        name: this.propertyName,
+        price: this.price,
+        type: this.propertyType,
+        datePosted: this.datePosted,
+        owner: this.owner,
+        contact: this.contact,
+        image: this.image,
+      });
+      this.propertyName = '';
+      this.price = '';
+      this.propertyType = '';
+      this.datePosted = '';
+      this.owner = '';
+      this.contact = '';
+      this.image = '';
+    }
+  }
+})
+</script>
+
+
+
+</body>
+</html>
