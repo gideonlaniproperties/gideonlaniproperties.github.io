@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Properties Marketplace</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100">
+    <header class="bg-white shadow-md py-4">
+        <div class="container mx-auto px-4">
+            <h1 class="text-lg font-bold">Properties Marketplace</h1>
+        </div>
+    </header>
+    <main class="container mx-auto px-4 py-8">
+        <h2 class="text-lg font-bold mb-4">Properties List</h2>
+        <div id="properties-list" class="grid grid-cols-3 gap-4">
+            <!-- properties will be displayed here -->
+        </div>
+    </main>
+
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase.js"></script>
+    <script>
+        // Initialize Firebase
+        var config = {
+            apiKey: "AIzaSyDeKIutwIDgLhXlPRH3a0jmXKsnGXVVGwU",
+            authDomain: "vuedemo-669fb.firebaseapp.com",
+            databaseURL: "https://vuedemo-669fb.firebaseio.com",
+            storageBucket: "vuedemo-669fb.appspot.com",
+        };
+        firebase.initializeApp(config);
+
+        // Get properties reference
+        var propertiesRef = firebase.database().ref('properties');
+
+        // Display properties in HTML
+        propertiesRef.on('value', function(snapshot) {
+            var properties = snapshot.val();
+            var propertiesHtml = '';
+            for (var key in properties) {
+                var property = properties[key];
+                propertiesHtml += '<div class="bg-white shadow-md rounded p-4">';
+                propertiesHtml += '<h3 class="text-lg font-bold">' + property.name + '</h3>';
+                propertiesHtml += '<p>Price: ' + property.price + '</p>';
+                propertiesHtml += '<p>Date Posted: ' + property.datePosted + '</p>';
+                propertiesHtml += '<p>Contract Number: ' + property.contractNumber + '</p>';
+                propertiesHtml += '<p>Owner Address: ' + property.ownerAddress + '</p>';
+                propertiesHtml += '<img src="' + property.url + '" alt="' + property.name + '" class="w-full">';
+                propertiesHtml += '</div>';
+            }
+            document.getElementById('properties-list').innerHTML = propertiesHtml;
+        });
+    </script>
+</body>
+</html>
