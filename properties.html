@@ -4,52 +4,81 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Properties - Gideonlani Properties</title>
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link 
+
+href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" 
+
+rel="stylesheet">
     <style>
-        /* Add font family for properties */
-        .property-font {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-        /* Add loading dialog styles */
-        #loading-dialog {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(255, 255, 255, 0.5);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-        #loading-dialog .spinner-border {
-            border: 4px solid rgba(0, 0, 0, 0.1);
-            border-top: 4px solid #3498db;
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            animation: spin 1s linear infinite;
-        }
-        @keyframes spin {
-            0% {
-                transform: rotate(0deg);
-            }
-            100% {
-                transform: rotate(360deg);
-            }
-        }
+      /* Add font family for properties */
+.property-font {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Add loading dialog styles */
+#loading-dialog {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(255, 255, 255, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#loading-dialog .spinner-border {
+    border: 4px solid rgba(0, 0, 0, 0.1);
+    border-top: 4px solid #3498db;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+/* Change header background color */
+header {
+    background-color: green; /* Green background */
+    color: black; /* White text color */
+    padding: 10px 0;
+}
+
+/* Change body background color */
+body {
+    background-color: #f2f2f2; /* Light gray background */
+}
+
+/* Add background color to items */
+.bg-white {
+    background-color: #ffffff; /* White background with some opacity */
+    opacity: 0.8;
+}
     </style>
 </head>
-<body class="bg-gray-100">
-    <header class="bg-transparent py-4">
+<body class="bg-gray-100" >
+    <header class="bg-black py-4">
         <div class="container mx-auto px-4">
-            <h1 class="text-lg font-bold text-white">Explore Our Latest Listings - Gideonlani Properties</h1>
+            <h1 class="text-lg font-bold text-white">Explore Our Latest 
+
+Listings - Gideonlani Properties</h1>
         </div>
     </header>
 
     <main class="container mx-auto px-4 py-8">
         <h2 class="text-lg font-bold mb-4">Properties List</h2>
-        <div id="properties-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div id="properties-list" class="grid grid-cols-1 md:grid-cols-2 
+
+lg:grid-cols-3 gap-4">
             <!-- properties will be displayed here -->
         </div>
     </main>
@@ -60,7 +89,9 @@
     </div>
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase.js"></script>
+    <script 
+
+src="https://www.gstatic.com/firebasejs/8.10.0/firebase.js"></script>
     <script>
         // Initialize Firebase
         var config = {
@@ -80,17 +111,37 @@
             var propertiesHtml = '';
             for (var key in properties) {
                 var property = properties[key];
-                propertiesHtml += '<div class="bg-white shadow-md rounded p-4">';
-                propertiesHtml += '<h3 class="text-lg font-bold property-font text-center">' + property.name + '</h3>';
-                propertiesHtml += '<img src="' + property.url + '" alt="' + property.name + '" class="w-full mx-auto">';
-                propertiesHtml += '<p class="text-gray-600 property-font">Price: ' + property.price + '</p>';
-                propertiesHtml += '<p class="text-gray-600 property-font">Date Posted: ' + property.datePosted + '</p>';
-                propertiesHtml += '<p class="text-gray-600 property-font">Contract Number: ' + property.contractNumber + '</p>';
-                propertiesHtml += '<p class="text-gray-600 property-font">Owner Address: ' + property.ownerAddress + '</p>';
-                propertiesHtml += '<button class="bg-transparent border-2 border-blue-500 hover:border-green-500 text-blue-500 hover:text-green-500 font-bold py-2 px-4 rounded block mx-auto">Contact Now</button>';
+                propertiesHtml += '<div class="bg-white shadow-md rounded 
+
+p-4">';
+                propertiesHtml += '<h3 class="text-lg font-bold property-
+
+font text-center">' + property.name + '</h3>';
+                propertiesHtml += '<img src="' + property.url + '" alt="' + 
+
+property.name + '" class="w-full mx-auto">';
+                propertiesHtml += '<p class="text-gray-600 property-
+
+font">Price: ' + property.price + '</p>';
+                propertiesHtml += '<p class="text-gray-600 property-
+
+font">Date Posted: ' + property.datePosted + '</p>';
+                propertiesHtml += '<p class="text-gray-600 property-
+
+font">Contract Number: ' + property.contractNumber + '</p>';
+                propertiesHtml += '<p class="text-gray-600 property-
+
+font">Owner Address: ' + property.ownerAddress + '</p>';
+                propertiesHtml += '<button class="bg-transparent border-2 
+
+border-blue-500 hover:border-green-500 text-blue-500 hover:text-green-500 
+
+font-bold py-2 px-4 rounded block mx-auto">Contact Now</button>';
                 propertiesHtml += '</div>';
             }
-            document.getElementById('properties-list').innerHTML = propertiesHtml;
+            document.getElementById('properties-list').innerHTML = 
+
+propertiesHtml;
             // Hide loading dialog
             $('#loading-dialog').hide();
         });
